@@ -15,7 +15,7 @@
  *  limitations under the License.
  */
 
-function XyloController($scope, $http, $document) {
+function XyloController($scope, $http, $document, $timeout) {
 	var audioContext = typeof webkitAudioContext != 'undefined' ? new webkitAudioContext() : null;
 
 	var audioBuffer = $http({
@@ -26,6 +26,8 @@ function XyloController($scope, $http, $document) {
 		return audioContext.createBuffer(response.data, false);
 	});
 
+	$scope.playing = {};
+	
 	$scope.play = function(index) {
 		var source = audioContext.createBufferSource();
 		source.connect(audioContext.destination);
@@ -33,8 +35,21 @@ function XyloController($scope, $http, $document) {
 			source.playbackRate.value = Math.pow(2,index/12.);
 			source.buffer = buffer;
 			source.noteOn(0);
+			if ($scope.playing[index]) {
+				$timeout.cancel($scope.playing[index]);
+				$scope.playing[index] = false;
+			}
+			$timeout(function() {
+				$scope.playing[index] = $timeout(function() {
+					$scope.playing[index] = false;
+				}, 500);
+			});
 		});
 	};
+	
+	$scope.getAnimation = function(index) {
+		return $scope.playing[index] ? 'animate' : '';
+	}
 	
 	$document.bind('keypress', function(e) {
 		var keyMap = {
