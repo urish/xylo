@@ -15,7 +15,7 @@
  *  limitations under the License.
  */
 
-function XyloController($scope, $http) {
+function XyloController($scope, $http, $document) {
 	var audioContext = typeof webkitAudioContext != 'undefined' ? new webkitAudioContext() : null;
 
 	var audioBuffer = $http({
@@ -35,4 +35,16 @@ function XyloController($scope, $http) {
 			source.noteOn(0);
 		});
 	};
+	
+	$document.bind('keypress', function(e) {
+		var keyMap = {
+			49: 0, 50: 2, 51: 4, 52: 5,	53: 7, 54: 9, 55: 11, 56:12
+		};
+		var index = keyMap[event.keyCode];
+		if (index !== undefined) {
+			$scope.$apply(function() {
+				$scope.play(index);
+			});
+		}
+	});
 }

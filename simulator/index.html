@@ -23,6 +23,9 @@ limitations under the License.
 		<style>
 			body {
 				background: black;
+			}
+			
+			footer {
 				color: white;
 			}
 		</style>
@@ -43,14 +46,19 @@ limitations under the License.
 		
 		<div class="container" ng-controller="XyloController">
 			<div class="hero-unit">
-				<button class="btn btn-large" ng-click="play(0);">do</button>
-				<button class="btn btn-large" ng-click="play(2);">re</button>
-				<button class="btn btn-large" ng-click="play(4);">mi</button>
-				<button class="btn btn-large" ng-click="play(5);">fa</button>
-				<button class="btn btn-large" ng-click="play(7);">sol</button>
-				<button class="btn btn-large" ng-click="play(9);">la</button>
-				<button class="btn btn-large" ng-click="play(11);">si</button>
-				<button class="btn btn-large" ng-click="play(12);">do</button>
+				<p>
+					<button class="btn btn-large" ng-click="play(0);">do</button>
+					<button class="btn btn-large" ng-click="play(2);">re</button>
+					<button class="btn btn-large" ng-click="play(4);">mi</button>
+					<button class="btn btn-large" ng-click="play(5);">fa</button>
+					<button class="btn btn-large" ng-click="play(7);">sol</button>
+					<button class="btn btn-large" ng-click="play(9);">la</button>
+					<button class="btn btn-large" ng-click="play(11);">si</button>
+					<button class="btn btn-large" ng-click="play(12);">do</button>
+				</p>
+				<p>
+					<small>You can also use keyboard numbers 1 - 8 to play the notes.</small>
+				</p>
 			</div>
 		</div>
 		<footer>
