@@ -15,35 +15,20 @@
  *  limitations under the License.
  */
 
-function XyloController($scope, $http, $document, $timeout) {
-	var audioContext = typeof webkitAudioContext != 'undefined' ? new webkitAudioContext() : null;
-
-	var audioBuffer = $http({
-		method: "GET",
-		url: "do7.wav",
-		responseType: "arraybuffer"
-	}).then(function(response) {
-		return audioContext.createBuffer(response.data, false);
-	});
-
+function XyloController($scope, $http, $document, $timeout, xyloSynth, xyloBackend) {
 	$scope.playing = {};
 	
 	$scope.play = function(index) {
-		var source = audioContext.createBufferSource();
-		source.connect(audioContext.destination);
-		audioBuffer.then(function(buffer) {
-			source.playbackRate.value = Math.pow(2,index/12.);
-			source.buffer = buffer;
-			source.noteOn(0);
-			if ($scope.playing[index]) {
-				$timeout.cancel($scope.playing[index]);
+		xyloSynth.play(index);
+		xyloBackend.play(index);
+		if ($scope.playing[index]) {
+			$timeout.cancel($scope.playing[index]);
+			$scope.playing[index] = false;
+		}
+		$timeout(function() {
+			$scope.playing[index] = $timeout(function() {
 				$scope.playing[index] = false;
-			}
-			$timeout(function() {
-				$scope.playing[index] = $timeout(function() {
-					$scope.playing[index] = false;
-				}, 500);
-			});
+			}, 500);
 		});
 	};
 	
@@ -63,3 +48,33 @@ function XyloController($scope, $http, $document, $timeout) {
 		}
 	});
 }
+
+var app = angular.module('XyloDisk', []);
+
+app.service("xyloSynth", function($http) {
+	var audioContext = typeof webkitAudioContext != 'undefined' ? new webkitAudioContext() : null;
+
+	var audioBuffer = $http({
+		method: "GET",
+		url: "do7.wav",
+		responseType: "arraybuffer"
+	}).then(function(response) {
+		return audioContext.createBuffer(response.data, false);
+	});
+
+	this.play = function(pitch) {
+		var source = audioContext.createBufferSource();
+		source.connect(audioContext.destination);
+		audioBuffer.then(function(buffer) {
+			source.playbackRate.value = Math.pow(2, pitch/12.);
+			source.buffer = buffer;
+			source.noteOn(0);
+		});
+	};
+});
+
+app.service("xyloBackend", function($http) {
+	this.play = function(pitch) {
+		$http.get("/play/" + pitch);
+	};
+});

@@ -44,11 +44,23 @@ class XyloRequestHandler(BaseHTTPServer.BaseHTTPRequestHandler):
 		if match:
 			self.play_now(int(match.group(1)))
 			self.send_no_content()
+		elif self.path == "/":
+			self.serve_file("../simulator/index.html")
+		elif self.path == "/script.js":
+			self.serve_file("../simulator/script.js")
 		else:
 			self.send_response(404)
 			self.send_header("Cache-Control", "no-store, no-cache, must-revalidate, max-age=0")
 			self.send_header("Pragma", "no-cache")
 			self.end_headers()
+			
+	def serve_file(self, filename):
+		self.send_response(200)
+		self.send_header("Cache-Control", "no-store, no-cache, must-revalidate, max-age=0")
+		self.send_header("Pragma", "no-cache")
+		self.end_headers()
+		with open(filename, "rb") as file:
+			self.wfile.write(file.read())
 	
 	def play_now(self, note):
 		global g_xylo
