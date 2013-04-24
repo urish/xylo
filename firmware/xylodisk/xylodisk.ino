@@ -1,5 +1,5 @@
 /*
-  Xylodisk Firmware v0.0.1
+  Xylodisk Firmware v0.1.0
  
  Hard Drive Xylophone Project
  Copyright 2013, Omri Baumer & Uri Shaked
@@ -17,44 +17,53 @@
  limitations under the License.
  */
 
-int pin1 = 6;
-int pin2 = 7;
+#define BAUD_RATE (115200)
 
 void setup() {
-  pinMode(pin1, OUTPUT);
-  pinMode(pin2, OUTPUT);
+  Serial.begin(BAUD_RATE);
+  Serial.println("100 Ready !");
 }
 
-// When specifying intensity < 255, use a capacitor to eliminate noise.
-void ping(int intensity) {
-  digitalWrite(pin1, LOW);
-  if (intensity == 255) {
-    digitalWrite(pin2, HIGH);
+void malletControl() {
+  int direction = Serial.parseInt();
+  int pin = Serial.parseInt();
+  int pinPair = pin + 1;
+
+  if (pin == 0) {
     return;
   }
-  analogWrite(pin2, intensity);
-}
 
-void pong(int intensity) {
-  digitalWrite(pin2, LOW);
-  if (intensity == 255) {
-    digitalWrite(pin1, HIGH);
-    return;
+  pinMode(pin, OUTPUT);
+  pinMode(pinPair, OUTPUT);  
+
+  switch (direction) {
+  case -1:
+    Serial.println("Reverse");
+    digitalWrite(pin, LOW);
+    digitalWrite(pinPair, HIGH);
+    break;
+  case 0:
+    Serial.println("Zero");
+    digitalWrite(pin, LOW);
+    digitalWrite(pinPair, LOW);
+    break;
+  case 1:
+    Serial.println("Forward");
+    digitalWrite(pin, HIGH);
+    digitalWrite(pinPair, LOW);
+    break;
   }
-  analogWrite(pin1, intensity);
-}
-
-void hit(int length) {
-  ping(255);
-  delay(length / 2);
-  pong(255);
-  delay(length / 2);
 }
 
 // Currently plays a simple rhythm
 void loop() {
-  hit(1000);
-  hit(500);
-  hit(500);
+  switch (Serial.read()) {
+  case 'C':
+    malletControl();
+    break;
+  }
 }
+
+
+
 
