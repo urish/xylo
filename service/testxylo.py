@@ -36,7 +36,10 @@ def hd1_play_one(note):
 	g_xylo.zero(pin, g_play_counter)
 	delay(15)
 	g_xylo.backward(pin, g_play_counter)
-	delay(20)
+	if note == 5:
+		delay(15)
+	else:
+		delay(20)
 	g_xylo.forward(pin, g_play_counter)
 	delay(2)
 	g_xylo.zero(pin, g_play_counter)
@@ -258,5 +261,5 @@ def play_suzanna():
 	play_note(DO, 2)
 	
 if __name__ == "__main__":	
-	play_suzanna()
+	play_twinkle()
 	
