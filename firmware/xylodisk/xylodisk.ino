@@ -17,12 +17,55 @@
  limitations under the License.
  */
 
+#include <QueueArray.h>
+
 #define BAUD_RATE (115200)
 #define BUF_SIZE (64)
+
+typedef struct {
+  int time;
+  char direction;
+  char pin;
+} 
+QueueEntry;
+
+QueueArray <QueueEntry> queue;
+int queueStartTime;
 
 void setup() {
   Serial.begin(BAUD_RATE);
   Serial.println("100 Ready !");
+  queueStartTime = millis();
+}
+
+void pinCommand(int direction, int pin, boolean output) {
+  int pinPair = pin + 1;
+  pinMode(pin, OUTPUT);
+  pinMode(pinPair, OUTPUT);
+
+  switch (direction) {
+  case -1:
+    digitalWrite(pin, LOW);
+    digitalWrite(pinPair, HIGH);
+    if (output) {
+      Serial.println("201 Reverse");
+    }
+    break;
+  case 0:
+    digitalWrite(pin, LOW);
+    digitalWrite(pinPair, LOW);
+    if (output) {
+      Serial.println("200 Zero");
+    }
+    break;
+  case 1:
+    digitalWrite(pin, HIGH);
+    digitalWrite(pinPair, LOW);
+    if (output) {
+      Serial.println("202 Forward");
+    }
+    break;
+  }
 }
 
 void malletControl(char *args) {
@@ -31,55 +74,85 @@ void malletControl(char *args) {
   int pinPair = 0;
 
   sscanf(args, "%d %d", &direction, &pin);
-  pinPair = pin + 1;
 
-  if (pin == 0) {
+  if (pin > 1) {
+    pinCommand(direction, pin, true);
+  }
+}
+
+void resetQueue(char* args) {
+  queueStartTime = millis();
+  while (!queue.isEmpty()) {
+    queue.pop();
+  }
+  Serial.println("300 Reset");
+}
+
+void enqueue(char* args) {
+  int time;
+  int direction = 0;
+  int pin = 0;
+
+  sscanf(args, "%lu %d %d", &time, &direction, &pin);
+
+  if (queue.count() >= 512) {
+    Serial.println("400 Queue Full");
     return;
   }
 
-  pinMode(pin, OUTPUT);
-  pinMode(pinPair, OUTPUT);  
-
-  switch (direction) {
-  case -1:
-    Serial.println("201 Reverse");
-    digitalWrite(pin, LOW);
-    digitalWrite(pinPair, HIGH);
-    break;
-  case 0:
-    Serial.println("200 Zero");
-    digitalWrite(pin, LOW);
-    digitalWrite(pinPair, LOW);
-    break;
-  case 1:
-    Serial.println("202 Forward");
-    digitalWrite(pin, HIGH);
-    digitalWrite(pinPair, LOW);
-    break;
+  if (pin > 1) {
+    QueueEntry entry;
+    entry.pin = pin;
+    entry.direction = direction;
+    entry.time = time;
+    queue.push(entry);
+    Serial.println("300 Enqueue Successful");
   }
 }
 
 void executeCommand(char *buf) {
-  if (buf[0] == 'C') {
-    malletControl(buf+1);
+  char *args = buf + 1;
+  switch (buf[0]) {
+  case 'C':
+    malletControl(args);
+    break;
+
+  case 'R':
+    resetQueue(args);
+    break;
+
+  case 'Q':
+    enqueue(args);
+    break;
   }
 }
-
-// Currently plays a simple rhythm
 
 char buf[BUF_SIZE];
 int index = 0;
 
 void loop() {
-  int ch = Serial.read();
-  if (ch == '\n') {
-    buf[index] = '\0';
-    executeCommand(buf);
-    index = 0;
-  } 
-  else if ((ch >= 0) && (index < BUF_SIZE - 1)) {
-    buf[index++] = ch;
+  if (Serial.available()) {
+    int ch = Serial.read();
+    if (ch == '\n') {
+      buf[index] = '\0';
+      executeCommand(buf);
+      index = 0;
+    } 
+    else if ((ch >= 0) && (index < BUF_SIZE - 1)) {
+      buf[index++] = ch;
+    }
+  }
+  if (!queue.isEmpty()) {
+    QueueEntry head = queue.peek();
+    if (head.time < millis() - queueStartTime) {
+      pinCommand(head.direction, head.pin, false);
+      queue.pop();
+    }
   }
 }
+
+
+
+
 
 

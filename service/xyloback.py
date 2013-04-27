@@ -37,15 +37,24 @@ class XyloBackend(object):
 		arduino_output = self.robot_device.readline()
 		if DEBUG_TO_CONSOLE:
 			print "<<< Xylo response: ", arduino_output.strip()
+			
+	def reset(self):
+		self._write("R")
 	
-	def forward(self, pin):
-		self._write("C 1 %d" % pin)
+	def pinCommand(self, direction, pin, delay):
+		cmd = "C"
+		if delay > 0:
+			cmd = "Q " + delay
+		self._write(cmd + " %d %d" % (direction, pin))
+	
+	def forward(self, pin, delay = 0):
+		self.pinCommand(1, pin, delay)
 
-	def backward(self, pin):
-		self._write("C -1 %d" % pin)
+	def backward(self, pin, delay = 0):
+		self.pinCommand(-1, pin, delay)
 
-	def zero(self, pin):
-		self._write("C 0 %d" % pin)
+	def zero(self, pin, delay = 0):
+		self.pinCommand(0, pin, delay)
 	
 	def raw_command(self, cmd):
 		self._write(cmd)
