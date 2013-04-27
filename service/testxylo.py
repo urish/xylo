@@ -23,40 +23,22 @@ g_play_counter = 100 #ms
 
 def delay(ms):
 	global g_play_counter
-	g_play_counter += ms
-
-def play_now(note):
-	global g_xylo
-	global g_play_counter
-	pin = 10 + note * 2
-	g_xylo.backward(pin, g_play_counter)
-	delay(1)
-	g_xylo.forward(pin, g_play_counter)
-	delay(100)	
-	g_xylo.backward(pin, g_play_counter)
-	delay(100)	
-	g_xylo.zero(pin, g_play_counter)
-	
-def setup(note):
-	global g_xylo
-	global g_play_counter
-	pin = 10 + note * 2
-	g_xylo.forward(pin, g_play_counter)
-	delay(50)
-	g_xylo.backward(pin, g_play_counter)
-	delay(50)
-	g_xylo.zero(pin, g_play_counter)
+	g_play_counter += int(ms)
 
 def hd1_play_one(note):
 	global g_xylo
 	global g_play_counter
 	pin = 10 + note * 2
-	g_xylo.forward(pin, g_play_counter)
-	delay(60)
 	g_xylo.backward(pin, g_play_counter)
-	delay(23)
+	delay(2)
 	g_xylo.forward(pin, g_play_counter)
-	delay(1)
+	delay(80)
+	g_xylo.zero(pin, g_play_counter)
+	delay(15)
+	g_xylo.backward(pin, g_play_counter)
+	delay(20)
+	g_xylo.forward(pin, g_play_counter)
+	delay(2)
 	g_xylo.zero(pin, g_play_counter)
 	
 def hd1_play_two(note):
@@ -73,7 +55,7 @@ def hd1_play_two(note):
 	delay(1)
 	g_xylo.zero(pin, g_play_counter)
 	
-DELAY_CONST = 500
+DELAY_CONST = 300
 def play_note(note_spec, delay_ms):
 	type, pin = note_spec
 	if type == 0:
@@ -209,11 +191,72 @@ def play_johnatan():
 	play_note(SOL, 1)
 	play_note(DO, 2)
 	
+def play_suzanna():
+	play_note(DO, 0.5)
+	play_note(RE, 0.5)
+	play_note(MI, 1)
+	play_note(SOL, 1)
+	play_note(SOL, 1)
+	
+	play_note(LA, 1)
+	play_note(SOL, 1)
+	play_note(MI, 1)
+	play_note(DO, 1.5)
+
+	play_note(RE, 0.5)
+	play_note(MI, 1)
+	play_note(MI, 1)
+	play_note(RE, 1)
+	play_note(DO, 1)
+	play_note(RE, 3)
+
+	play_note(DO, 0.5)
+	play_note(RE, 0.5)
+	play_note(MI, 1)
+	play_note(SOL, 1)
+	play_note(SOL, 1.5)
+	
+	play_note(LA, 0.5)
+	play_note(SOL, 1)
+	play_note(MI, 1)
+	play_note(DO, 1.5)
+
+	play_note(RE, 0.5)
+	play_note(MI, 1)
+	play_note(MI, 1)
+	play_note(RE, 1)
+	play_note(RE, 1)
+	play_note(DO, 4)
+
+	play_note(FA, 2)
+	play_note(FA, 2)
+	play_note(LA, 1)
+	play_note(LA, 2)
+	play_note(LA, 1)
+	play_note(SOL, 1)
+	play_note(SOL, 1)
+	play_note(MI, 1)
+	play_note(DO, 1)
+	play_note(RE, 3)
+
+	play_note(DO, 0.5)
+	play_note(RE, 0.5)
+	play_note(MI, 1)
+	play_note(SOL, 1)
+	play_note(SOL, 1)
+	
+	play_note(LA, 1)
+	play_note(SOL, 1)
+	play_note(MI, 1)
+	play_note(DO, 1)
+
+	play_note(RE, 1)
+	play_note(MI, 1)
+	play_note(MI, 1)
+	play_note(RE, 1)
+	play_note(RE, 1)
+	play_note(DO, 2)
+	
 if __name__ == "__main__":	
-	setup(5)
-	setup(4)
-	
-	delay(1000)
-	
-	play_johnatan()
+	play_suzanna()
 	
