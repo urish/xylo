@@ -65,10 +65,11 @@ class XyloRequestHandler(BaseHTTPServer.BaseHTTPRequestHandler):
 	def play_now(self, note):
 		global g_xylo
 		pin = 10 + note * 2
-		g_xylo.forward(pin)
-		time.sleep(0.2)
 		g_xylo.backward(pin)
-		time.sleep(0.2)
+		g_xylo.forward(pin)
+		time.sleep(0.100)
+		g_xylo.backward(pin)
+		time.sleep(0.100)
 		g_xylo.zero(pin)
 	
 	def address_string(self):

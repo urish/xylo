@@ -21,7 +21,7 @@ import serial
 ### Constants ###
 SERIAL_PORT	= os.getenv("ROBOT_PORT") or "COM8"
 SERIAL_BAUD = 115200
-DEBUG_TO_CONSOLE = False
+DEBUG_TO_CONSOLE = True
 
 ### Class XyloBackend ###
 class XyloBackend(object):
