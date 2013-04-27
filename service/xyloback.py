@@ -21,7 +21,7 @@ import serial
 ### Constants ###
 SERIAL_PORT	= os.getenv("ROBOT_PORT") or "COM8"
 SERIAL_BAUD = 115200
-DEBUG_TO_CONSOLE = True
+DEBUG_TO_CONSOLE = False
 
 ### Class XyloBackend ###
 class XyloBackend(object):
@@ -30,8 +30,13 @@ class XyloBackend(object):
 		
 	def _write(self, cmd):
 		if DEBUG_TO_CONSOLE:
-			print ">>> Sending to robot: ", repr(cmd)
-		self.robot_device.write(cmd)
+			print ">>> Sending to Xylo: ", repr(cmd)
+		self.robot_device.write(cmd + "\n")
+		self.robot_device.flush()
+		
+		arduino_output = self.robot_device.readline()
+		if DEBUG_TO_CONSOLE:
+			print "<<< Xylo response: ", arduino_output.strip()
 	
 	def forward(self, pin):
 		self._write("C 1 %d" % pin)
