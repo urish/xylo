@@ -27,6 +27,9 @@ DEBUG_TO_CONSOLE = False
 class XyloBackend(object):
 	def __init__(self):
 		self.robot_device = serial.Serial(SERIAL_PORT, SERIAL_BAUD)
+		arduino_output = self.robot_device.readline()
+		if DEBUG_TO_CONSOLE:
+			print "<<< Xylo response: ", arduino_output.strip()
 		
 	def _write(self, cmd):
 		if DEBUG_TO_CONSOLE:
@@ -44,7 +47,7 @@ class XyloBackend(object):
 	def pinCommand(self, direction, pin, delay):
 		cmd = "C"
 		if delay > 0:
-			cmd = "Q " + delay
+			cmd = "Q %d" % delay
 		self._write(cmd + " %d %d" % (direction, pin))
 	
 	def forward(self, pin, delay = 0):
