@@ -18,16 +18,20 @@
  */
 
 #define BAUD_RATE (115200)
+#define BUF_SIZE (64)
 
 void setup() {
   Serial.begin(BAUD_RATE);
   Serial.println("100 Ready !");
 }
 
-void malletControl() {
-  int direction = Serial.parseInt();
-  int pin = Serial.parseInt();
-  int pinPair = pin + 1;
+void malletControl(char *args) {
+  int direction = 0;
+  int pin = 0;
+  int pinPair = 0;
+
+  sscanf(args, "%d %d", &direction, &pin);
+  pinPair = pin + 1;
 
   if (pin == 0) {
     return;
@@ -38,32 +42,44 @@ void malletControl() {
 
   switch (direction) {
   case -1:
-    Serial.println("Reverse");
+    Serial.println("201 Reverse");
     digitalWrite(pin, LOW);
     digitalWrite(pinPair, HIGH);
     break;
   case 0:
-    Serial.println("Zero");
+    Serial.println("200 Zero");
     digitalWrite(pin, LOW);
     digitalWrite(pinPair, LOW);
     break;
   case 1:
-    Serial.println("Forward");
+    Serial.println("202 Forward");
     digitalWrite(pin, HIGH);
     digitalWrite(pinPair, LOW);
     break;
   }
 }
 
-// Currently plays a simple rhythm
-void loop() {
-  switch (Serial.read()) {
-  case 'C':
-    malletControl();
-    break;
+void executeCommand(char *buf) {
+  if (buf[0] == 'C') {
+    malletControl(buf+1);
   }
 }
 
+// Currently plays a simple rhythm
 
+char buf[BUF_SIZE];
+int index = 0;
+
+void loop() {
+  int ch = Serial.read();
+  if (ch == '\n') {
+    buf[index] = '\0';
+    executeCommand(buf);
+    index = 0;
+  } 
+  else if ((ch >= 0) && (index < BUF_SIZE - 1)) {
+    buf[index++] = ch;
+  }
+}
 
 
