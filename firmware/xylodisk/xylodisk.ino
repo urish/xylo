@@ -23,14 +23,14 @@
 #define BUF_SIZE (64)
 
 typedef struct {
-  int time;
+  unsigned long time;
   char direction;
   char pin;
 } 
 QueueEntry;
 
 QueueArray <QueueEntry> queue;
-int queueStartTime;
+unsigned long queueStartTime;
 
 void setup() {
   Serial.begin(BAUD_RATE);
@@ -89,7 +89,7 @@ void resetQueue(char* args) {
 }
 
 void enqueue(char* args) {
-  int time;
+  unsigned long time;
   int direction = 0;
   int pin = 0;
 
@@ -150,9 +150,4 @@ void loop() {
     }
   }
 }
-
-
-
-
-
 
