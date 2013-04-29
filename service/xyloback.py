@@ -44,7 +44,7 @@ class XyloBackend(object):
 	def reset(self):
 		self._write("R")
 	
-	def pinCommand(self, direction, pin, delay):
+	def pin_command(self, direction, pin, delay):
 		cmd = "C"
 		if delay > 0:
 			cmd = "Q %d" % delay

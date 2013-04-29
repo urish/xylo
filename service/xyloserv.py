@@ -20,11 +20,13 @@ from urlparse import urlparse
 import re
 import time
 import xyloback
+import xyloplay
 
 PORT = 8281
 
 g_dns_cache = {}
 g_xylo = xyloback.XyloBackend()
+g_play = xyloplay.XyloPlay(g_xylo)
 
 class XyloRequestHandler(BaseHTTPServer.BaseHTTPRequestHandler):
 	def send_no_content(self):
@@ -42,7 +44,9 @@ class XyloRequestHandler(BaseHTTPServer.BaseHTTPRequestHandler):
 		normalized_path = urlparse(self.path).path.lower().lstrip("/")
 		match = re.match(r"^play/([\d]+)$", normalized_path)
 		if match:
-			self.play_now(int(match.group(1)))
+			global g_play
+			g_play.reset()
+			g_play.play(int(match.group(1)))
 			self.send_no_content()
 		elif self.path == "/":
 			self.serve_file("../simulator/index.html")
@@ -61,17 +65,7 @@ class XyloRequestHandler(BaseHTTPServer.BaseHTTPRequestHandler):
 		self.end_headers()
 		with open(filename, "rb") as file:
 			self.wfile.write(file.read())
-	
-	def play_now(self, note):
-		global g_xylo
-		pin = 10 + note * 2
-		g_xylo.backward(pin)
-		g_xylo.forward(pin)
-		time.sleep(0.100)
-		g_xylo.backward(pin)
-		time.sleep(0.100)
-		g_xylo.zero(pin)
-	
+		
 	def address_string(self):
 		global g_dns_cache
 		remote_ip = self.client_address[0]

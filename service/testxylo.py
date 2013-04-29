@@ -15,251 +15,56 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import time
-import xyloback
+from xyloback import XyloBackend
+from xyloplay import XyloPlay, Notes
 
-g_xylo = xyloback.XyloBackend()
-g_play_counter = 100 #ms
+### Class Songs ###
+class Songs:
+	DO = Notes.DO
+	RE = Notes.RE
+	MI = Notes.MI
+	FA = Notes.FA
+	SOL = Notes.SOL
+	LA = Notes.LA
 
-def delay(ms):
-	global g_play_counter
-	g_play_counter += int(ms)
+	SCALE = [
+		DO, RE, MI, FA, SOL, LA
+	]
 
-def hd1_play_one(note):
-	global g_xylo
-	global g_play_counter
-	pin = 10 + note * 2
-	g_xylo.backward(pin, g_play_counter)
-	delay(2)
-	g_xylo.forward(pin, g_play_counter)
-	delay(80)
-	g_xylo.zero(pin, g_play_counter)
-	delay(15)
-	g_xylo.backward(pin, g_play_counter)
-	if note == 5:
-		delay(15)
-	else:
-		delay(20)
-	g_xylo.forward(pin, g_play_counter)
-	delay(2)
-	g_xylo.zero(pin, g_play_counter)
+	TWINKLE = [
+		DO, DO, SOL, SOL, LA, LA, (SOL, 2),
+		FA, FA, MI, MI, RE, RE, (DO, 2),
+		SOL, SOL, FA, FA, MI, MI, (RE, 2),
+		SOL, SOL, FA, FA, MI, MI, (RE, 2),
+		DO, DO, SOL, SOL, LA, LA, (SOL, 2),
+		FA, FA, MI, MI, RE, RE, (DO, 2),
+	]
 	
-def hd1_play_two(note):
-	global g_xylo
-	global g_play_counter
-	pin = 10 + note * 2
-	g_xylo.backward(pin, g_play_counter)
-	delay(60)
-	g_xylo.forward(pin, g_play_counter)
-	delay(15)
-	g_xylo.zero(pin, g_play_counter)
-	delay(13)
-	g_xylo.backward(pin, g_play_counter)
-	delay(1)
-	g_xylo.zero(pin, g_play_counter)
+	JONATHAN = [
+		SOL, MI, MI, FA, RE, (RE, 2),
+		DO, RE, MI, FA, SOL, SOL, (SOL, 2),
+		SOL, MI, MI, FA, RE, (RE, 2),
+		DO, MI, SOL, SOL, (DO, 2),
+
+		RE, RE, RE, RE, RE, MI, (FA, 2),
+		MI, MI, MI, MI, MI, FA, (SOL, 2),
+
+		SOL, MI, MI, FA, RE, (RE, 2),
+		DO, MI, SOL, SOL, (DO, 2),
+	]
 	
-DELAY_CONST = 300
-def play_note(note_spec, delay_ms):
-	type, pin = note_spec
-	if type == 0:
-		hd1_play_one(pin)
-	elif type == 1:
-		hd1_play_two(pin)
-	elif type == 2:
-		play_now(pin)
-	delay(delay_ms * DELAY_CONST)
+	OH_SUSANNA = [
+		(DO, .5), (RE, .5), MI, SOL, SOL, LA, SOL, MI, (DO, 1.5),
+		(RE, .5), MI, MI, RE, DO, (RE, 3),
+		(DO, .5), (RE, .5), MI, SOL, (SOL, 1.5), (LA, .5), SOL, MI, (DO, 1.5),
+		(RE, .5), MI, MI, RE, RE, (DO, 4),
+		
+		(FA, 2), (FA, 2), LA, (LA, 2), LA, SOL, SOL, MI, DO, (RE, 3),
 
-DO = [1, 5]
-RE = [0, 9]
-MI = [0, 7]
-FA = [1, 4]
-SOL = [0, 5]
-LA = [0, 4]
-
-def play_scale():
-	play_note(DO, 1)
-	play_note(RE, 1)
-	play_note(MI, 1)
-	play_note(FA, 1)
-	play_note(SOL, 1)
-	play_note(LA, 1)
-
-def play_twinkle():
-	play_note(DO, 1)
-	play_note(DO, 1)
-	play_note(SOL, 1)
-	play_note(SOL, 1)
-	play_note(LA, 1)
-	play_note(LA, 1)
-	play_note(SOL, 2)
-	
-	play_note(FA, 1)
-	play_note(FA, 1)
-	play_note(MI, 1)
-	play_note(MI, 1)
-	play_note(RE, 1)
-	play_note(RE, 1)
-	play_note(DO, 2)
-	
-	play_note(SOL, 1)
-	play_note(SOL, 1)
-	play_note(FA, 1)
-	play_note(FA, 1)
-	play_note(MI, 1)
-	play_note(MI, 1)
-	play_note(RE, 2)
-
-	play_note(SOL, 1)
-	play_note(SOL, 1)
-	play_note(FA, 1)
-	play_note(FA, 1)
-	play_note(MI, 1)
-	play_note(MI, 1)
-	play_note(RE, 2)
-
-	play_note(DO, 1)
-	play_note(DO, 1)
-	play_note(SOL, 1)
-	play_note(SOL, 1)
-	play_note(LA, 1)
-	play_note(LA, 1)
-	play_note(SOL, 2)
-	
-	play_note(FA, 1)
-	play_note(FA, 1)
-	play_note(MI, 1)
-	play_note(MI, 1)
-	play_note(RE, 1)
-	play_note(RE, 1)
-	play_note(DO, 2)
-
-def play_johnatan():
-	play_note(SOL, 1)
-	play_note(MI, 1)
-	play_note(MI, 2)
-	
-	play_note(FA, 1)
-	play_note(RE, 1)
-	play_note(RE, 2)
-
-	play_note(DO, 1)
-	play_note(RE, 1)
-	play_note(MI, 1)
-	play_note(FA, 1)
-	play_note(SOL, 1)
-	play_note(SOL, 1)
-	play_note(SOL, 2)
-
-	play_note(SOL, 1)
-	play_note(MI, 1)
-	play_note(MI, 2)
-	
-	play_note(FA, 1)
-	play_note(RE, 1)
-	play_note(RE, 2)
-
-	play_note(DO, 1)
-	play_note(MI, 1)
-	play_note(SOL, 1)
-	play_note(SOL, 1)
-	play_note(DO, 2)
-	
-	play_note(RE, 1)
-	play_note(RE, 1)
-	play_note(RE, 1)
-	play_note(RE, 1)
-	play_note(RE, 1)
-	play_note(MI, 1)
-	play_note(FA, 2)
-
-	play_note(MI, 1)
-	play_note(MI, 1)
-	play_note(MI, 1)
-	play_note(MI, 1)
-	play_note(MI, 1)
-	play_note(FA, 1)
-	play_note(SOL, 2)
-
-	play_note(SOL, 1)
-	play_note(MI, 1)
-	play_note(MI, 2)
-	
-	play_note(FA, 1)
-	play_note(RE, 1)
-	play_note(RE, 2)
-
-	play_note(DO, 1)
-	play_note(MI, 1)
-	play_note(SOL, 1)
-	play_note(SOL, 1)
-	play_note(DO, 2)
-	
-def play_suzanna():
-	play_note(DO, 0.5)
-	play_note(RE, 0.5)
-	play_note(MI, 1)
-	play_note(SOL, 1)
-	play_note(SOL, 1)
-	
-	play_note(LA, 1)
-	play_note(SOL, 1)
-	play_note(MI, 1)
-	play_note(DO, 1.5)
-
-	play_note(RE, 0.5)
-	play_note(MI, 1)
-	play_note(MI, 1)
-	play_note(RE, 1)
-	play_note(DO, 1)
-	play_note(RE, 3)
-
-	play_note(DO, 0.5)
-	play_note(RE, 0.5)
-	play_note(MI, 1)
-	play_note(SOL, 1)
-	play_note(SOL, 1.5)
-	
-	play_note(LA, 0.5)
-	play_note(SOL, 1)
-	play_note(MI, 1)
-	play_note(DO, 1.5)
-
-	play_note(RE, 0.5)
-	play_note(MI, 1)
-	play_note(MI, 1)
-	play_note(RE, 1)
-	play_note(RE, 1)
-	play_note(DO, 4)
-
-	play_note(FA, 2)
-	play_note(FA, 2)
-	play_note(LA, 1)
-	play_note(LA, 2)
-	play_note(LA, 1)
-	play_note(SOL, 1)
-	play_note(SOL, 1)
-	play_note(MI, 1)
-	play_note(DO, 1)
-	play_note(RE, 3)
-
-	play_note(DO, 0.5)
-	play_note(RE, 0.5)
-	play_note(MI, 1)
-	play_note(SOL, 1)
-	play_note(SOL, 1)
-	
-	play_note(LA, 1)
-	play_note(SOL, 1)
-	play_note(MI, 1)
-	play_note(DO, 1)
-
-	play_note(RE, 1)
-	play_note(MI, 1)
-	play_note(MI, 1)
-	play_note(RE, 1)
-	play_note(RE, 1)
-	play_note(DO, 2)
+		(DO, .5), (RE, .5), MI, SOL, SOL, LA, SOL, MI, DO,
+		RE, MI, MI, RE, RE, (DO, 2),
+	]
 	
 if __name__ == "__main__":	
-	play_twinkle()
+	XyloPlay(XyloBackend()).play_song(Songs.SCALE)
 	
