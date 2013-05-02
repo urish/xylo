@@ -32,6 +32,7 @@ class Songs:
 	SCALE = [
 		DO, RE, MI, FA, SOL, LA, SI, HIGH_DO
 	]
+	
 	HIGH_SCALE = [
 		SI, HIGH_DO, SI, HIGH_DO
 	]
@@ -70,6 +71,13 @@ class Songs:
 		RE, MI, MI, RE, RE, (DO, 2),
 	]
 	
+	HANUKKAH = [
+		SOL, MI, (SOL, 2), SOL, MI, (SOL, 2), MI, SOL, HIGH_DO, SI, (LA, 2),
+		FA, RE, (FA, 2), FA, RE, (FA, 2), RE, FA, SI, LA, (SOL, 2),
+		SOL, MI, (SOL, 2), SOL, MI, (SOL, 2), MI, SOL, HIGH_DO, SI, (LA, 2),
+		SI, SI, (SI, 2), SI, SI, (SI, 2), SI, SOL, LA, SI, (HIGH_DO, 2),
+	]
+
 if __name__ == "__main__":	
 	XyloPlay(XyloBackend()).play_song(Songs.SCALE)
 	
