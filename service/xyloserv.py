@@ -46,7 +46,8 @@ class XyloRequestHandler(BaseHTTPServer.BaseHTTPRequestHandler):
 		if match:
 			global g_play
 			g_play.reset()
-			g_play.play(int(match.group(1)))
+			g_play.play(int(match.group(1)), 0.1)
+			g_play.send_commands()
 			self.send_no_content()
 		elif self.path == "/":
 			self.serve_file("../simulator/index.html")

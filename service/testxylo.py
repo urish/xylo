@@ -26,9 +26,14 @@ class Songs:
 	FA = Notes.FA
 	SOL = Notes.SOL
 	LA = Notes.LA
+	SI = Notes.SI
+	HIGH_DO = Notes.HIGH_DO
 
 	SCALE = [
-		DO, RE, MI, FA, SOL, LA
+		DO, RE, MI, FA, SOL, LA, SI, HIGH_DO
+	]
+	HIGH_SCALE = [
+		SI, HIGH_DO, SI, HIGH_DO
 	]
 
 	TWINKLE = [

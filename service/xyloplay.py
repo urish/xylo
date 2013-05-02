@@ -24,6 +24,7 @@ class Notes(object):
 	SOL = FA + 2
 	LA = SOL + 2
 	SI = LA + 2
+	HIGH_DO = SI + 1
 
 ### Class XyloPlay ###
 class XyloPlay(object):
@@ -96,31 +97,31 @@ class PlaySequences:
 	Forward = 1
 	Backward = -1
 	Zero = 0		
-
+#28
 	pitches = {
 		Notes.DO: (
-			Pin(20), 
-			Backward, Delay(60),
+			Pin(38),
+			Backward, Delay(300),
 			Forward, Delay(10), 
 			Zero, Delay(13), 
 			Backward, Delay(1), 
 			Zero
 		),
 		Notes.RE: (
-			Pin(28),
-			Backward, Delay(2),
-			Forward, Delay(80), 
-			Zero, Delay(15), 
-			Backward, Delay(25), 
-			Forward, Delay(2), 
+			Pin(38),
+			#Backward, Delay(2),
+			Forward, Delay(80),
+			Zero, Delay(10),
+			Backward, Delay(20),
+			Forward, Delay(2),
 			Zero
 		),
 		Notes.MI: (
-			Pin(24),
+			Pin(18),
 			Backward, Delay(2),
 			Forward, Delay(80), 
-			Zero, Delay(15), 
-			Backward, Delay(25), 
+			Zero, Delay(10),
+			Backward, Delay(20),
 			Forward, Delay(2), 
 			Zero
 		),
@@ -128,26 +129,42 @@ class PlaySequences:
 			Pin(18), 
 			Backward, Delay(60),
 			Forward, Delay(15), 
-			Zero, Delay(13), 
+			Zero, Delay(10),
 			Backward, Delay(1), 
 			Zero
 		),
 		Notes.SOL: (
-			Pin(20), 
+			Pin(28),
 			Backward, Delay(2),
-			Forward, Delay(80), 
-			Zero, Delay(15), 
-			Backward, Delay(5), 
-			Forward, Delay(2), 
+			Forward, Delay(80),
+			Zero, Delay(15),
+			Backward, Delay(5),
+			Forward, Delay(2),
 			Zero
 		),
 		Notes.LA: (
-			Pin(18), 
+			Pin(28),
+			Backward, Delay(60),
+			Forward, Delay(10),
+			Zero, Delay(10),
+			Backward, Delay(1),
+			Zero
+		),
+		Notes.SI: (
+			Pin(24),
+			Backward, Delay(100),
+			Forward, Delay(2),
+			Zero, Delay(13),
+			#Backward, Delay(1),
+			Zero
+		),
+		Notes.HIGH_DO: (
+			Pin(24),
 			Backward, Delay(2),
-			Forward, Delay(80), 
-			Zero, Delay(15), 
-			Backward, Delay(20), 
-			Forward, Delay(2), 
+			Forward, Delay(80),
+			Zero, Delay(15),
+			Backward, Delay(25),
+			Forward, Delay(2),
 			Zero
 		),
 	}
