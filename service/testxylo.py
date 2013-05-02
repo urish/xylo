@@ -77,6 +77,15 @@ class Songs:
 		SOL, MI, (SOL, 2), SOL, MI, (SOL, 2), MI, SOL, HIGH_DO, SI, (LA, 2),
 		SI, SI, (SI, 2), SI, SI, (SI, 2), SI, SOL, LA, SI, (HIGH_DO, 2),
 	]
+	
+	DOUBLES = [
+		(DO, 0), MI,
+		(RE, 0), FA,
+		(MI, 0), SOL,
+		(FA, 0), LA,
+		(SOL, 0), SI,
+		(DO, 0), (MI, 0), (SOL, 0),
+	]
 
 if __name__ == "__main__":	
 	XyloPlay(XyloBackend()).play_song(Songs.SCALE)
