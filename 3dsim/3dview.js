@@ -1,10 +1,8 @@
 app.directive("xyloSimulator", function ($q, $rootScope) {
 	var clock = new THREE.Clock();
-	var light1, light2, light3, light4;
 	var renderer, scene;
 	var camera;
-	var sphere;
-	var plane;
+	var composer;
 
 	function loadModel(jsonUrl) {
 		var deferred = $q.defer();
@@ -39,6 +37,10 @@ app.directive("xyloSimulator", function ($q, $rootScope) {
 		});
 	}
 
+	function devicePixelRatio() {
+		return window.devicePixelRatio || 1;
+	}
+
 	function createDisk() {
 		return loadModel("obj/disk.json").then(function (result) {
 			var node = new THREE.Object3D();
@@ -57,23 +59,20 @@ app.directive("xyloSimulator", function ($q, $rootScope) {
 	}
 
 	function render() {
-
 		var time = Date.now() * 0.0005;
 		var delta = clock.getDelta();
 
 		//camera.position.z = 150 + Math.cos(time) * 25;
 		//light1.position.z = 10 + Math.cos(time) * 25;
-		//plane.rotation.z += delta;
 
-		renderer.render(scene, camera);
-
+		composer.render();
 	}
 
 	return {
 		link: function (scope, element) {
 			scene = new THREE.Scene();
 			renderer = new THREE.WebGLRenderer({ antialias: true });
-			renderer.setSize(window.innerWidth, window.innerHeight);
+			renderer.setSize(element.width(), element.height());
 
 			// camera
 			camera = new THREE.PerspectiveCamera(50, element.width() / element.height(), 1, 5000);
@@ -121,6 +120,18 @@ app.directive("xyloSimulator", function ($q, $rootScope) {
 				node.position.x = 105;
 				scene.add(node);
 			});
+
+			// Post-processing
+			var dpr = devicePixelRatio();
+			composer = new THREE.EffectComposer(renderer);
+			composer.setSize(element.width() * dpr, element.height() * dpr);
+			var renderPass = new THREE.RenderPass(scene, camera);
+			composer.addPass(renderPass);
+
+			var effect = new THREE.ShaderPass(THREE.FXAAShader);
+			effect.uniforms['resolution'].value.set(1 / (element.width() * dpr), 1 / (element.height() * dpr));
+			effect.renderToScreen = true;
+			composer.addPass(effect);
 
 			animate();
 		}
