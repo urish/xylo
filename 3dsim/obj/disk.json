@@ -1,0 +1,116 @@
+{
+	"data": "disk.ctm",
+	"offsets": [ 0, 481499, 514575, 764072, 955274, 1060258, 1223616, 1229815, 1453353, 1684449, 1790955, 1835017, 1835903 ],
+	"materials": [
+		{
+			"DbgColor": 15658734,
+			"DbgIndex": 0,
+			"DbgName": "Ribbon",
+			"colorDiffuse": [0.397849, 0.325437, 0.262075],
+			"illumination": 2,
+			"opticalDensity": 1.0,
+			"specularCoef": 50.78125,
+			"transparency": 0.47
+		},
+		{
+			"DbgColor": 15597568,
+			"DbgIndex": 1,
+			"DbgName": "Platter_Center",
+			"colorDiffuse": [0.731183, 0.731183, 0.731183],
+			"illumination": 2,
+			"specularCoef": 50.78125
+		},
+		{
+			"DbgColor": 60928,
+			"DbgIndex": 2,
+			"DbgName": "Actuator_Back",
+			"colorDiffuse": [0.1595, 0.309192, 0.55],
+			"illumination": 2,
+			"specularCoef": 50.78125
+		},
+		{
+			"DbgColor": 238,
+			"DbgIndex": 3,
+			"DbgName": "Actuator_Head",
+			"colorDiffuse": [0.989247, 0.717204, 0.211982],
+			"illumination": 2,
+			"specularCoef": 50.78125
+		},
+		{
+			"DbgColor": 15658496,
+			"DbgIndex": 4,
+			"DbgName": "Platter_Top",
+			"colorDiffuse": [0.87, 0.87, 0.87],
+			"illumination": 2,
+			"specularCoef": 50.78125
+		},
+		{
+			"DbgColor": 61166,
+			"DbgIndex": 5,
+			"DbgName": "Actuator_Cover",
+			"colorDiffuse": [1.0, 1.0, 1.0],
+			"illumination": 2,
+			"specularCoef": 50.78125
+		},
+		{
+			"DbgColor": 15597806,
+			"DbgIndex": 6,
+			"DbgName": "Actuator_Top_Magnet",
+			"colorDiffuse": [1.0, 1.0, 1.0],
+			"illumination": 2,
+			"specularCoef": 50.78125
+		},
+		{
+			"DbgColor": 14968288,
+			"DbgIndex": 7,
+			"DbgName": "Actuator_Screw",
+			"colorDiffuse": [1.0, 1.0, 1.0],
+			"illumination": 2,
+			"specularCoef": 50.78125
+		},
+		{
+			"DbgColor": 7078673,
+			"DbgIndex": 8,
+			"DbgName": "Darker_Plastic",
+			"colorDiffuse": [0.219355, 0.219355, 0.219355],
+			"illumination": 2,
+			"specularCoef": 50.78125
+		},
+		{
+			"DbgColor": 3668136,
+			"DbgIndex": 9,
+			"DbgName": "Platter",
+			"colorDiffuse": [1.0, 1.0, 1.0],
+			"illumination": 2,
+			"specularCoef": 50.78125
+		},
+		{
+			"DbgColor": 1458591,
+			"DbgIndex": 10,
+			"DbgName": "Black_Base",
+			"colorDiffuse": [0.0, 0.0, 0.0],
+			"colorAmbient": [1, 0, 0],
+			"colorSpecular": [0.8, 0.8, 0.8],
+			"illumination": 2,
+			"specularCoef": 100.0
+		},
+		{
+			"DbgColor": 499914,
+			"DbgIndex": 11,
+			"DbgName": "Disk_Label",
+			"colorAmbient": [0.03, 0.03, 0.03],
+			"colorDiffuse": [1.0, 1.0, 1.0],
+			"illumination": 2,
+			"specularCoef": 50.78125
+		},
+		{
+			"DbgColor": 8478454,
+			"DbgIndex": 12,
+			"DbgName": "unknown.1",
+			"colorAmbient": [0.03, 0.03, 0.03],
+			"colorDiffuse": [1.0, 1.0, 1.0],
+			"illumination": 2,
+			"specularCoef": 50.78125
+		}
+	]
+}

@@ -6,10 +6,10 @@ app.directive("xyloSimulator", function ($q, $rootScope) {
 	var sphere;
 	var plane;
 
-	function loadModel(modelName) {
+	function loadModel(jsonUrl) {
 		var deferred = $q.defer();
 		var loader = new THREE.CTMLoader();
-		loader.loadParts("obj/bottle.json", function (geometries, materials) {
+		loader.loadParts(jsonUrl, function (geometries, materials) {
 			$rootScope.$apply(function () {
 				deferred.resolve({geometries: geometries, materials: materials});
 			});
@@ -33,6 +33,18 @@ app.directive("xyloSimulator", function ($q, $rootScope) {
 				} else {
 					var mesh = new THREE.Mesh(result.geometries[i], material);
 				}
+				node.add(mesh);
+			}
+			return node;
+		});
+	}
+
+	function createDisk() {
+		return loadModel("obj/disk.json").then(function (result) {
+			var node = new THREE.Object3D();
+			for (var i = 0; i < result.geometries.length; i++) {
+				var material = result.materials[i];
+				var mesh = new THREE.Mesh(result.geometries[i], material);
 				node.add(mesh);
 			}
 			return node;
@@ -79,15 +91,13 @@ app.directive("xyloSimulator", function ($q, $rootScope) {
 			// add to the scene
 			scene.add(pointLight);
 
-			var pointLight = new THREE.PointLight(0xFFFFFF);
-
-			// set its position
-			pointLight.position.x = 100;
-			pointLight.position.y = 50;
-			pointLight.position.z = 130;
-
-			// add to the scene
-			scene.add(pointLight);
+			var planeMaterial = new THREE.MeshPhongMaterial({color: 0x80a060});
+			var plane = new THREE.Mesh(new THREE.PlaneGeometry(300, 300), planeMaterial);
+			plane.overdraw = true;
+			plane.doublesided = true;
+			plane.material.side = THREE.BackSide;
+			plane.rotation.x = Math.PI / 2;
+			scene.add(plane);
 
 			renderer = new THREE.WebGLRenderer();
 			renderer.setSize(element.width(), element.height());
@@ -103,6 +113,13 @@ app.directive("xyloSimulator", function ($q, $rootScope) {
 					scene.add(node);
 					node = node.clone();
 				}
+			});
+
+			createDisk().then(function (node) {
+				node.scale = {x: 0.2, y: 0.2, z: 0.2};
+				node.position.z = 80;
+				node.position.x = 105;
+				scene.add(node);
 			});
 
 			animate();
