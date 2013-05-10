@@ -1,0 +1,74 @@
+{
+	"data": "bottle.ctm",
+	"offsets": [ 0, 17034, 33084, 37342, 37988, 39164 ],
+	"materials": [
+		{
+			"DbgColor": 15658734,
+			"DbgIndex": 0,
+			"DbgName": "Beer",
+			"colorAmbient": [0.0, 0.0, 0.0],
+			"colorDiffuse": [0.57492, 0.80784, 0.4968],
+			"colorSpecular": [0.5, 0.5, 0.5],
+			"illumination": 2,
+			"opticalDensity": 1.0,
+			"specularCoef": 96.078431,
+			"transparency": 0.01
+		},
+		{
+			"DbgColor": 15597568,
+			"DbgIndex": 1,
+			"DbgName": "Bottle",
+			"colorAmbient": [0.0, 0.0, 0.0],
+			"colorDiffuse": [0.53687, 1, 0.5175],
+			"colorSpecular": [0.5, 0.5, 0.5],
+			"illumination": 2,
+			"opticalDensity": 1.0,
+			"specularCoef": 96.078431,
+			"transparency": 0.25
+		},
+		{
+			"DbgColor": 60928,
+			"DbgIndex": 2,
+			"DbgName": "Base",
+			"colorAmbient": [0.0, 0.0, 0.0],
+			"colorDiffuse": [0.1, 0.55, 0.15],
+			"colorSpecular": [0.5, 0.5, 0.5],
+			"illumination": 2,
+			"opticalDensity": 1.0,
+			"specularCoef": 96.078431,
+			"transparency": 0.05
+		},
+		{
+			"DbgColor": 238,
+			"DbgIndex": 3,
+			"DbgName": "Front",
+			"colorAmbient": [0.0, 0.0, 0.0],
+			"colorDiffuse": [0.64, 0.64, 0.64],
+			"colorSpecular": [0.0, 0.0, 0.0],
+			"illumination": 1,
+			"mapAlpha": "bottle_label.png",
+			"mapDiffuse": "bottle_label.png",
+			"opticalDensity": 1.0,
+			"specularCoef": 96.078431,
+			"transparency": 0.99
+		},
+		{
+			"DbgColor": 15658496,
+			"DbgIndex": 4,
+			"DbgName": "TopLabel",
+			"colorAmbient": [0.0, 0.0, 0.0],
+			"colorDiffuse": [0.64, 0.64, 0.64],
+			"colorSpecular": [0.0, 0.0, 0.0],
+			"illumination": 1,
+			"mapAlpha": "bottle_top.png",
+			"mapDiffuse": "bottle_top.png",
+			"opticalDensity": 1.0,
+			"specularCoef": 96.078431,
+			"transparency": 0.99
+		},
+		{
+			"DbgName": "Cap",
+			"colorDiffuse": [0, 0.48387, 0.0725]
+		}
+	]
+}
