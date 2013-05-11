@@ -19,8 +19,9 @@ app.directive("xyloSimulator", function ($q, $rootScope) {
 	var clock = new THREE.Clock();
 	var renderer, scene;
 	var camera;
+	var allObjs;
 	var composer;
-	var activeDisk = null;
+	var xyloUnits = [];
 	var debug = false;
 
 	function loadModel(jsonUrl) {
@@ -37,7 +38,6 @@ app.directive("xyloSimulator", function ($q, $rootScope) {
 	function devicePixelRatio() {
 		return window.devicePixelRatio || 1;
 	}
-
 
 	function createBottle() {
 		return loadModel("obj/bottle.json").then(function (result) {
@@ -96,16 +96,16 @@ app.directive("xyloSimulator", function ($q, $rootScope) {
 
 				actuatorNode.position.x += actuatorPivot.x;
 				actuatorNode.position.z += actuatorPivot.z;
-
-				node.setActuatorPosition = function (pos) {
-					var min = -Math.PI / 8;
-					var max = 0;
-					actuatorNode.rotation.y = min + (max - min) * pos;
-				}
-
+				actuatorNode.name = "Actuator";
 				return node;
 			}
 		)
+	}
+
+	function setActuatorPosition(diskObject, position) {
+		var min = -Math.PI / 8;
+		var max = 0;
+		diskObject.getObjectByName("Actuator").rotation.y = min + (max - min) * position;
 	}
 
 	function animate() {
@@ -117,9 +117,13 @@ app.directive("xyloSimulator", function ($q, $rootScope) {
 		var time = Date.now() * 0.0005;
 		var delta = clock.getDelta();
 
-		if (activeDisk) {
-			activeDisk.setActuatorPosition(Math.abs(Math.sin(time)));
-		}
+		xyloUnits.map(function (unit) {
+			if (unit.disk) {
+				setActuatorPosition(unit.disk, Math.abs(Math.sin(time)));
+			}
+		});
+
+		allObjs.rotation.y = time /2.;
 
 		composer.render();
 	}
@@ -141,34 +145,62 @@ app.directive("xyloSimulator", function ($q, $rootScope) {
 			scene.add(pointLight);
 
 			// Objects
+			allObjs = new THREE.Object3D();
+			scene.add(allObjs);
+
 			var planeMaterial = new THREE.MeshPhongMaterial({color: 0x80a060});
 			var plane = new THREE.Mesh(new THREE.PlaneGeometry(300, 300), planeMaterial);
 			plane.overdraw = true;
 			plane.doublesided = true;
 			plane.material.side = THREE.BackSide;
 			plane.rotation.x = Math.PI / 2;
-			scene.add(plane);
+			allObjs.add(plane);
 
 			if (debug) {
-				scene.add(new THREE.AxisHelper(50));
+				allObjs.add(new THREE.AxisHelper(50));
 			}
 
-			createBottle().then(function (node) {
-				for (var i = 0; i < 3; i++) {
-					node.position.z = 100;
-					node.position.x = i * 50;
-					node.scale = {x: 0.1, y: 0.1, z: 0.1};
-					scene.add(node);
-					node = node.clone();
+			// Xylophone Units
+			for (i = 0; i < 4; i++) {
+				var unit = new THREE.Object3D();
+				unit.position.z = parseInt(i / 2) * 160 - 80;
+				unit.position.x = (i % 2) * 140 - 60;
+				if (i == 2) {
+					unit.position.z -= 32;
+					unit.position.x -= 10;
 				}
+				if (i == 3) {
+					unit.rotation.y = -Math.PI / 2;
+					unit.bottleRotation = {
+						x: 0, y: Math.PI, z: 0
+					};
+				}
+				xyloUnits.push(unit);
+				allObjs.add(unit);
+			}
+
+			createBottle().then(function (bottleNode) {
+				bottleNode.scale = {x: 0.1, y: 0.1, z: 0.1};
+
+				xyloUnits.map(function (unit) {
+					var currentBottle = bottleNode.clone();
+					currentBottle.position.z = 111;
+					currentBottle.position.x = -50;
+					unit.add(currentBottle);
+					var currentBottle = bottleNode.clone();
+					currentBottle.position.z = 146;
+					currentBottle.position.x = -30;
+					unit.add(currentBottle);
+				});
 			});
 
 			createDisk().then(function (diskNode) {
 				diskNode.scale = {x: 0.2, y: 0.2, z: 0.2};
-				diskNode.position.z = 80;
-				diskNode.position.x = 105;
-				scene.add(diskNode);
-				activeDisk = diskNode;
+				xyloUnits.map(function (unit) {
+					var currentDisk = diskNode.clone();
+					unit.disk = currentDisk;
+					unit.add(currentDisk);
+				});
 			});
 
 			// Renderer
