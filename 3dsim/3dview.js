@@ -1,8 +1,26 @@
+/**
+ * Hard Drive Xylophone Project
+ * Copyright 2013, Omri Baumer & Uri Shaked
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ */
+
 app.directive("xyloSimulator", function ($q, $rootScope) {
 	var clock = new THREE.Clock();
 	var renderer, scene;
 	var camera;
 	var composer;
+	var activeDisk = null;
 
 	function loadModel(jsonUrl) {
 		var deferred = $q.defer();
@@ -14,6 +32,11 @@ app.directive("xyloSimulator", function ($q, $rootScope) {
 		}, { useWorker: true, useBuffers: true });
 		return deferred.promise;
 	}
+
+	function devicePixelRatio() {
+		return window.devicePixelRatio || 1;
+	}
+
 
 	function createBottle() {
 		return loadModel("obj/bottle.json").then(function (result) {
@@ -37,20 +60,40 @@ app.directive("xyloSimulator", function ($q, $rootScope) {
 		});
 	}
 
-	function devicePixelRatio() {
-		return window.devicePixelRatio || 1;
-	}
-
 	function createDisk() {
 		return loadModel("obj/disk.json").then(function (result) {
-			var node = new THREE.Object3D();
-			for (var i = 0; i < result.geometries.length; i++) {
-				var material = result.materials[i];
-				var mesh = new THREE.Mesh(result.geometries[i], material);
-				node.add(mesh);
+				var node = new THREE.Object3D();
+				// TODO reflective material for 9 (platters)
+
+				var actuatorNode = new THREE.Object3D();
+				var actuatorPivot = {x: -40, y: 0, z: 135};
+
+				for (var i = 0; i < result.geometries.length; i++) {
+					var material = result.materials[i];
+					var mesh = new THREE.Mesh(result.geometries[i], material);
+					if (i == 3) continue;
+					if ([2, 13].indexOf(i) >= 0) {
+						mesh.position.x -= actuatorPivot.x;
+						mesh.position.z -= actuatorPivot.z;
+						actuatorNode.add(mesh);
+					} else {
+						node.add(mesh);
+					}
+				}
+				node.add(actuatorNode);
+
+				actuatorNode.position.x += actuatorPivot.x;
+				actuatorNode.position.z += actuatorPivot.z;
+
+				node.setActuatorPosition = function (pos) {
+					var min = -Math.PI / 8;
+					var max = 0;
+					actuatorNode.rotation.y = min + (max - min) * pos;
+				}
+
+				return node;
 			}
-			return node;
-		});
+		)
 	}
 
 	function animate() {
@@ -62,8 +105,9 @@ app.directive("xyloSimulator", function ($q, $rootScope) {
 		var time = Date.now() * 0.0005;
 		var delta = clock.getDelta();
 
-		//camera.position.z = 150 + Math.cos(time) * 25;
-		//light1.position.z = 10 + Math.cos(time) * 25;
+		if (activeDisk) {
+			activeDisk.setActuatorPosition(Math.abs(Math.sin(time)));
+		}
 
 		composer.render();
 	}
@@ -114,11 +158,12 @@ app.directive("xyloSimulator", function ($q, $rootScope) {
 				}
 			});
 
-			createDisk().then(function (node) {
-				node.scale = {x: 0.2, y: 0.2, z: 0.2};
-				node.position.z = 80;
-				node.position.x = 105;
-				scene.add(node);
+			createDisk().then(function (diskNode) {
+				diskNode.scale = {x: 0.2, y: 0.2, z: 0.2};
+				diskNode.position.z = 80;
+				diskNode.position.x = 105;
+				scene.add(diskNode);
+				activeDisk = diskNode;
 			});
 
 			// Post-processing
@@ -136,4 +181,5 @@ app.directive("xyloSimulator", function ($q, $rootScope) {
 			animate();
 		}
 	};
-});
+})
+;

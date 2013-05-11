@@ -1,6 +1,6 @@
 {
 	"data": "disk.ctm",
-	"offsets": [ 0, 481499, 514575, 764072, 955274, 1060258, 1223616, 1229815, 1453353, 1684449, 1790955, 1835017, 1835903 ],
+	"offsets": [ 0, 481499, 514575, 764072, 955274, 962966, 1126324, 1132523, 1356061, 1587157, 1693663, 1737725, 1738611, 1739883 ],
 	"materials": [
 		{
 			"DbgColor": 15658734,
@@ -109,6 +109,14 @@
 			"DbgName": "unknown.1",
 			"colorAmbient": [0.03, 0.03, 0.03],
 			"colorDiffuse": [1.0, 1.0, 1.0],
+			"illumination": 2,
+			"specularCoef": 50.78125
+		},
+		{
+			"DbgColor": 15658496,
+			"DbgIndex": 13,
+			"DbgName": "Actuator",
+			"colorDiffuse": [0.87, 0.87, 0.87],
 			"illumination": 2,
 			"specularCoef": 50.78125
 		}
