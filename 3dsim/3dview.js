@@ -63,42 +63,41 @@ app.directive("xyloSimulator", function ($q, $rootScope) {
 
 	function createDisk() {
 		return loadModel("obj/disk.json").then(function (result) {
-				var node = new THREE.Object3D();
+			var node = new THREE.Object3D();
 
-				var actuatorNode = new THREE.Object3D();
-				var actuatorPivot = {x: -40, y: 0, z: 135};
+			var actuatorNode = new THREE.Object3D();
+			var actuatorPivot = {x: -40, y: 0, z: 135};
 
-				var armMaterial = new THREE.MeshPhongMaterial({
-					color: 0xffffaa, emissive: 0x403000, specular: 0x442200, reflectivity: 0.4, metal: true });
-				var malletMaterial = new THREE.MeshPhongMaterial({
-					color: 0xaaaaaa, emissive: 0x404040, specular: 0x444444, reflectivity: 0.2, metal: true });
+			var armMaterial = new THREE.MeshPhongMaterial({
+				color: 0xffffaa, emissive: 0x403000, specular: 0x442200, reflectivity: 0.4, metal: true });
+			var malletMaterial = new THREE.MeshPhongMaterial({
+				color: 0xaaaaaa, emissive: 0x404040, specular: 0x444444, reflectivity: 0.2, metal: true });
 
-				for (var i = 0; i < result.geometries.length; i++) {
-					var material = result.materials[i];
-					if (i == 0) {
-						material = armMaterial;
-					}
-					if (i == 14 || i == 9) {
-						material = malletMaterial;
-					}
-					var mesh = new THREE.Mesh(result.geometries[i], material);
-					if (i == 3) continue;
-					if ([0, 2, 13, 14].indexOf(i) >= 0) {
-						mesh.position.x -= actuatorPivot.x;
-						mesh.position.z -= actuatorPivot.z;
-						actuatorNode.add(mesh);
-					} else {
-						node.add(mesh);
-					}
+			for (var i = 0; i < result.geometries.length; i++) {
+				var material = result.materials[i];
+				if (i == 0) {
+					material = armMaterial;
 				}
-				node.add(actuatorNode);
-
-				actuatorNode.position.x += actuatorPivot.x;
-				actuatorNode.position.z += actuatorPivot.z;
-				actuatorNode.name = "Actuator";
-				return node;
+				if (i == 14 || i == 9) {
+					material = malletMaterial;
+				}
+				var mesh = new THREE.Mesh(result.geometries[i], material);
+				if (i == 3) continue;
+				if ([0, 2, 13, 14].indexOf(i) >= 0) {
+					mesh.position.x -= actuatorPivot.x;
+					mesh.position.z -= actuatorPivot.z;
+					actuatorNode.add(mesh);
+				} else {
+					node.add(mesh);
+				}
 			}
-		)
+			node.add(actuatorNode);
+
+			actuatorNode.position.x += actuatorPivot.x;
+			actuatorNode.position.z += actuatorPivot.z;
+			actuatorNode.name = "Actuator";
+			return node;
+		});
 	}
 
 	function setActuatorPosition(diskObject, position) {
@@ -127,7 +126,7 @@ app.directive("xyloSimulator", function ($q, $rootScope) {
 				if (unit.targetPosition == 0.5) {
 					unit.speed /= 1.5;
 				}
-				setTimeout(function() {
+				setTimeout(function () {
 					if (unit.actuatorPosition == unit.targetPosition) {
 						unit.targetPosition = 0.5;
 					}
@@ -237,12 +236,12 @@ app.directive("xyloSimulator", function ($q, $rootScope) {
 			composer.addPass(effect);
 
 			var pitchToUnit = {
-				0: [3, 0], 	2:[3, 1],
-				4: [2, 0],	5:[2, 1],
-				7: [1, 0],	9:[1, 1],
-				11: [0, 0],	12:[0, 1]
+				0: [3, 0], 2: [3, 1],
+				4: [2, 0], 5: [2, 1],
+				7: [1, 0], 9: [1, 1],
+				11: [0, 0], 12: [0, 1]
 			};
-			scope.$on("playNote", function(event, args) {
+			scope.$on("playNote", function (event, args) {
 				var unitSpec = pitchToUnit[args.pitch];
 				var unit = xyloUnits[unitSpec[0]];
 				unit.speed = 20;
