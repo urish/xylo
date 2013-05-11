@@ -64,7 +64,6 @@ app.directive("xyloSimulator", function ($q, $rootScope) {
 	function createDisk() {
 		return loadModel("obj/disk.json").then(function (result) {
 				var node = new THREE.Object3D();
-				// TODO reflective material for 9 (platters)
 
 				var actuatorNode = new THREE.Object3D();
 				var actuatorPivot = {x: -40, y: 0, z: 135};
@@ -118,12 +117,26 @@ app.directive("xyloSimulator", function ($q, $rootScope) {
 		var delta = clock.getDelta();
 
 		xyloUnits.map(function (unit) {
-			if (unit.disk) {
-				setActuatorPosition(unit.disk, Math.abs(Math.sin(time)));
+			if (unit.disk && (unit.actuatorPosition != unit.targetPosition)) {
+				var actuatorDelta = delta * unit.speed;
+				if (unit.actuatorPosition > unit.targetPosition) {
+					unit.actuatorPosition = Math.max(0, unit.actuatorPosition - actuatorDelta);
+				} else {
+					unit.actuatorPosition = Math.min(1, unit.actuatorPosition + actuatorDelta);
+				}
+				if (unit.targetPosition == 0.5) {
+					unit.speed /= 1.5;
+				}
+				setTimeout(function() {
+					if (unit.actuatorPosition == unit.targetPosition) {
+						unit.targetPosition = 0.5;
+					}
+				}, 50);
+				setActuatorPosition(unit.disk, unit.actuatorPosition);
 			}
 		});
 
-		allObjs.rotation.y = time /2.;
+		//allObjs.rotation.y = time /2.;
 
 		composer.render();
 	}
@@ -175,6 +188,8 @@ app.directive("xyloSimulator", function ($q, $rootScope) {
 						x: 0, y: Math.PI, z: 0
 					};
 				}
+				unit.actuatorPosition = 0.5;
+				unit.targetPosition = unit.actuatorPosition;
 				xyloUnits.push(unit);
 				allObjs.add(unit);
 			}
@@ -200,6 +215,7 @@ app.directive("xyloSimulator", function ($q, $rootScope) {
 					var currentDisk = diskNode.clone();
 					unit.disk = currentDisk;
 					unit.add(currentDisk);
+					setActuatorPosition(unit.disk, unit.actuatorPosition);
 				});
 			});
 
@@ -219,6 +235,19 @@ app.directive("xyloSimulator", function ($q, $rootScope) {
 			effect.uniforms['resolution'].value.set(1 / (element.width() * dpr), 1 / (element.height() * dpr));
 			effect.renderToScreen = true;
 			composer.addPass(effect);
+
+			var pitchToUnit = {
+				0: [3, 0], 	2:[3, 1],
+				4: [2, 0],	5:[2, 1],
+				7: [1, 0],	9:[1, 1],
+				11: [0, 0],	12:[0, 1]
+			};
+			scope.$on("playNote", function(event, args) {
+				var unitSpec = pitchToUnit[args.pitch];
+				var unit = xyloUnits[unitSpec[0]];
+				unit.speed = 20;
+				unit.targetPosition = unitSpec[1];
+			});
 
 			animate();
 		}

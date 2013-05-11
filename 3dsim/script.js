@@ -20,6 +20,9 @@ function XyloController($scope, $http, $document, $timeout, xyloSynth, xyloBacke
 
 	$scope.play = function (index) {
 		xyloSynth.play(index);
+		$scope.$emit("playNote", {
+			pitch: index
+		});
 		xyloBackend.play(index);
 		if ($scope.playing[index]) {
 			$timeout.cancel($scope.playing[index]);
