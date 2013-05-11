@@ -61,6 +61,26 @@ app.directive("xyloSimulator", function ($q, $rootScope) {
 		});
 	}
 
+	var liquidMaterial = new THREE.MeshPhongMaterial({
+		color: 0x404000,
+		diffuse: 0xffffff,
+		reflectivity: 1.0
+	});
+	liquidMaterial.side = THREE.DoubleSide;
+
+	function addLiquid(bottle, level) {
+		if (level == 0) {
+			return;
+		}
+
+		var height = 500 * level;
+		var liquid = new THREE.Mesh(new THREE.CylinderGeometry(120, 120, height, 50, 50, false), liquidMaterial);
+		liquid.position.x = -25;
+		liquid.position.z = -800;
+		liquid.position.y = 30 + height / 2;
+		bottle.add(liquid);
+	}
+
 	function createDisk() {
 		return loadModel("obj/disk.json").then(function (result) {
 			var node = new THREE.Object3D();
@@ -135,7 +155,7 @@ app.directive("xyloSimulator", function ($q, $rootScope) {
 			}
 		});
 
-		//allObjs.rotation.y = time /2.;
+		allObjs.rotation.y = time / 2.;
 
 		composer.render();
 	}
@@ -193,6 +213,15 @@ app.directive("xyloSimulator", function ($q, $rootScope) {
 				allObjs.add(unit);
 			}
 
+			xyloUnits[0].liquidLevelLeft = 0.1;
+			xyloUnits[0].liquidLevelRight = 0.0;
+			xyloUnits[1].liquidLevelLeft = 0.3;
+			xyloUnits[1].liquidLevelRight = 0.2;
+			xyloUnits[2].liquidLevelLeft = 0.5;
+			xyloUnits[2].liquidLevelRight = 0.4;
+			xyloUnits[3].liquidLevelLeft = 0.8;
+			xyloUnits[3].liquidLevelRight = 1.0;
+
 			createBottle().then(function (bottleNode) {
 				bottleNode.scale = {x: 0.1, y: 0.1, z: 0.1};
 
@@ -200,10 +229,12 @@ app.directive("xyloSimulator", function ($q, $rootScope) {
 					var currentBottle = bottleNode.clone();
 					currentBottle.position.z = 111;
 					currentBottle.position.x = -50;
+					addLiquid(currentBottle, unit.liquidLevelLeft);
 					unit.add(currentBottle);
 					var currentBottle = bottleNode.clone();
 					currentBottle.position.z = 146;
 					currentBottle.position.x = -30;
+					addLiquid(currentBottle, unit.liquidLevelRight);
 					unit.add(currentBottle);
 				});
 			});
