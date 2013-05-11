@@ -1,16 +1,15 @@
 {
 	"data": "disk.ctm",
-	"offsets": [ 0, 481499, 514575, 764072, 955274, 962966, 1126324, 1132523, 1356061, 1587157, 1693663, 1737725, 1738611, 1739883 ],
+	"offsets": [ 0, 2256, 35332, 284829, 476031, 483723, 647081, 653280, 876818, 1107914, 1214420, 1258482, 1259368, 1260640, 1361406 ],
 	"materials": [
 		{
 			"DbgColor": 15658734,
 			"DbgIndex": 0,
-			"DbgName": "Ribbon",
-			"colorDiffuse": [0.397849, 0.325437, 0.262075],
+			"DbgName": "BrassArm",
+			"colorDiffuse": [0.487, 0.399, 0.06417],
 			"illumination": 2,
 			"opticalDensity": 1.0,
-			"specularCoef": 50.78125,
-			"transparency": 0.47
+			"specularCoef": 100
 		},
 		{
 			"DbgColor": 15597568,

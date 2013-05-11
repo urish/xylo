@@ -21,6 +21,7 @@ app.directive("xyloSimulator", function ($q, $rootScope) {
 	var camera;
 	var composer;
 	var activeDisk = null;
+	var debug = false;
 
 	function loadModel(jsonUrl) {
 		var deferred = $q.defer();
@@ -68,11 +69,22 @@ app.directive("xyloSimulator", function ($q, $rootScope) {
 				var actuatorNode = new THREE.Object3D();
 				var actuatorPivot = {x: -40, y: 0, z: 135};
 
+				var armMaterial = new THREE.MeshPhongMaterial({
+					color: 0xffffaa, emissive: 0x403000, specular: 0x442200, reflectivity: 0.4, metal: true });
+				var malletMaterial = new THREE.MeshPhongMaterial({
+					color: 0xaaaaaa, emissive: 0x404040, specular: 0x444444, reflectivity: 0.2, metal: true });
+
 				for (var i = 0; i < result.geometries.length; i++) {
 					var material = result.materials[i];
+					if (i == 0) {
+						material = armMaterial;
+					}
+					if (i == 14 || i == 9) {
+						material = malletMaterial;
+					}
 					var mesh = new THREE.Mesh(result.geometries[i], material);
 					if (i == 3) continue;
-					if ([2, 13].indexOf(i) >= 0) {
+					if ([0, 2, 13, 14].indexOf(i) >= 0) {
 						mesh.position.x -= actuatorPivot.x;
 						mesh.position.z -= actuatorPivot.z;
 						actuatorNode.add(mesh);
@@ -115,25 +127,20 @@ app.directive("xyloSimulator", function ($q, $rootScope) {
 	return {
 		link: function (scope, element) {
 			scene = new THREE.Scene();
-			renderer = new THREE.WebGLRenderer({ antialias: true });
-			renderer.setSize(element.width(), element.height());
 
-			// camera
+			// Camera
 			camera = new THREE.PerspectiveCamera(50, element.width() / element.height(), 1, 5000);
 			camera.position.set(200, 80, 200);
 			camera.lookAt(scene.position);
 
-			// create a point light
+			// Lights
 			var pointLight = new THREE.PointLight(0xFFFFFF);
-
-			// set its position
 			pointLight.position.x = 10;
 			pointLight.position.y = 50;
 			pointLight.position.z = 130;
-
-			// add to the scene
 			scene.add(pointLight);
 
+			// Objects
 			var planeMaterial = new THREE.MeshPhongMaterial({color: 0x80a060});
 			var plane = new THREE.Mesh(new THREE.PlaneGeometry(300, 300), planeMaterial);
 			plane.overdraw = true;
@@ -142,11 +149,9 @@ app.directive("xyloSimulator", function ($q, $rootScope) {
 			plane.rotation.x = Math.PI / 2;
 			scene.add(plane);
 
-			renderer = new THREE.WebGLRenderer();
-			renderer.setSize(element.width(), element.height());
-			element.append(renderer.domElement);
-
-			scene.add(new THREE.AxisHelper(50));
+			if (debug) {
+				scene.add(new THREE.AxisHelper(50));
+			}
 
 			createBottle().then(function (node) {
 				for (var i = 0; i < 3; i++) {
@@ -165,6 +170,11 @@ app.directive("xyloSimulator", function ($q, $rootScope) {
 				scene.add(diskNode);
 				activeDisk = diskNode;
 			});
+
+			// Renderer
+			renderer = new THREE.WebGLRenderer();
+			renderer.setSize(element.width(), element.height());
+			element.append(renderer.domElement);
 
 			// Post-processing
 			var dpr = devicePixelRatio();
