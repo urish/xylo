@@ -217,10 +217,10 @@ app.directive("xyloSimulator", function ($q, $rootScope) {
 			xyloUnits[0].liquidLevelRight = 0.0;
 			xyloUnits[1].liquidLevelLeft = 0.3;
 			xyloUnits[1].liquidLevelRight = 0.2;
-			xyloUnits[2].liquidLevelLeft = 0.5;
-			xyloUnits[2].liquidLevelRight = 0.4;
-			xyloUnits[3].liquidLevelLeft = 0.8;
-			xyloUnits[3].liquidLevelRight = 1.0;
+			xyloUnits[2].liquidLevelLeft = 0.6;
+			xyloUnits[2].liquidLevelRight = 0.5;
+			xyloUnits[3].liquidLevelLeft = 1.0;
+			xyloUnits[3].liquidLevelRight = 0.8;
 
 			createBottle().then(function (bottleNode) {
 				bottleNode.scale = {x: 0.1, y: 0.1, z: 0.1};
