@@ -54,15 +54,22 @@ function XyloController($scope, $http, $document, $timeout, xyloSynth, xyloBacke
 
 var app = angular.module('XyloDisk', []);
 
-app.service("xyloSynth", function ($http) {
-	var audioContext = typeof webkitAudioContext != 'undefined' ? new webkitAudioContext() : null;
+app.service("xyloSynth", function ($http, $q, $rootScope) {
+	var AudioContext = audioContext || webkitAudioContext;
+	var audioContext = typeof AudioContext != 'undefined' ? new AudioContext() : null;
 
 	var audioBuffer = $http({
 		method: "GET",
 		url: "do7.wav",
 		responseType: "arraybuffer"
 	}).then(function (response) {
-			return audioContext.createBuffer(response.data, false);
+			var deferred = $q.defer();
+			audioContext.decodeAudioData(response.data, function(decodedData) {
+				$rootScope.$apply(function() {
+					deferred.resolve(decodedData);
+				});
+			});
+			return deferred.promise;
 		});
 
 	this.play = function (pitch) {
@@ -71,7 +78,7 @@ app.service("xyloSynth", function ($http) {
 		audioBuffer.then(function (buffer) {
 			source.playbackRate.value = Math.pow(2, pitch / 12.);
 			source.buffer = buffer;
-			source.noteOn(0);
+			source.start(0);
 		});
 	};
 });
