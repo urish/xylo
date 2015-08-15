@@ -1,0 +1,101 @@
+<!--
+
+Hard Drive Xylophone Project
+Copyright 2013, Omri Baumer & Uri Shaked
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+  http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+  -->
+<!DOCTYPE html>
+<html ng-app="XyloDisk">
+	<head>
+		<meta charset="utf-8" />
+		<link rel="stylesheet" href="http://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/2.3.1/css/bootstrap.min.css" />
+		<style>
+			body {
+				background: black;
+			}
+
+			footer {
+				color: white;
+			}
+
+			.btn {
+				position: relative;
+			}
+
+			.btn.animate {
+				-webkit-animation: noteOnAnimation 0.7s;
+			}
+
+			@-webkit-keyframes "noteOnAnimation" {
+				0% {
+					box-shadow: inset 1px 1px 40px blue, inset -1px -1px 40px blue;
+				}
+				100% {
+				}
+			}
+		</style>
+
+	</head>
+	<body>
+		<header>
+			<div class="navbar navbar-inverse navbar-fixed-top">
+				<div class="navbar-inner">
+					<div class="container">
+						<a class="brand" href="#">Hard Drive Xylophone Simulator</a>
+						<div class="nav-collapse collapse">
+						</div>
+					</div>
+				</div>
+			</div>
+		</header>
+
+		<div class="container" ng-controller="XyloController">
+			<div class="hero-unit">
+				<p>
+					<button class="btn btn-large" ng-click="play(0);" ng-class="getAnimation(0)">do</button>
+					<button class="btn btn-large" ng-click="play(2);" ng-class="getAnimation(2)">re</button>
+					<button class="btn btn-large" ng-click="play(4);" ng-class="getAnimation(4)">mi</button>
+					<button class="btn btn-large" ng-click="play(5);" ng-class="getAnimation(5)">fa</button>
+					<button class="btn btn-large" ng-click="play(7);" ng-class="getAnimation(7)">sol</button>
+					<button class="btn btn-large" ng-click="play(9);" ng-class="getAnimation(9)">la</button>
+					<button class="btn btn-large" ng-click="play(11);" ng-class="getAnimation(11)">si</button>
+					<button class="btn btn-large" ng-click="play(12);" ng-class="getAnimation(12)">do</button>
+				</p>
+				<p>
+					<small>You can also use keyboard numbers 1 - 8 to play the notes.</small>
+				</p>
+			</div>
+            <div xylo-simulator style="height: 400px;">
+            </div>
+		</div>
+		<footer>
+			<div class="content">
+				Copyright &copy; 2013, 2014, Omri Baumer &amp; Uri Shaked.
+			</div>
+		</footer>
+
+		<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+		<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.1.4/angular.js"></script>
+        <script src="http://cdnjs.cloudflare.com/ajax/libs/three.js/r66/three.js" type="text/javascript"></script>
+        <script src="https://cdn.rawgit.com/mrdoob/three.js/2a5c54115b8bc5f2b9a5494eb7f055c21183bb23/examples/js/shaders/CopyShader.js" type="text/javascript"></script>
+        <script src="https://cdn.rawgit.com/mrdoob/three.js/2a5c54115b8bc5f2b9a5494eb7f055c21183bb23/examples/js/postprocessing/EffectComposer.js" type="text/javascript"></script>
+        <script src="https://cdn.rawgit.com/mrdoob/three.js/2a5c54115b8bc5f2b9a5494eb7f055c21183bb23/examples/js/postprocessing/MaskPass.js" type="text/javascript"></script>
+        <script src="https://cdn.rawgit.com/mrdoob/three.js/2a5c54115b8bc5f2b9a5494eb7f055c21183bb23/examples/js/postprocessing/RenderPass.js" type="text/javascript"></script>
+        <script src="https://cdn.rawgit.com/mrdoob/three.js/2a5c54115b8bc5f2b9a5494eb7f055c21183bb23/examples/js/postprocessing/ShaderPass.js" type="text/javascript"></script>
+        <script src="https://cdn.rawgit.com/mrdoob/three.js/2a5c54115b8bc5f2b9a5494eb7f055c21183bb23/examples/js/shaders/FXAAShader.js" type="text/javascript"></script>
+        <script src="js/loaders/ctm/CTMLoader.js"></script>
+		<script src="script.js"></script>
+        <script src="3dview.js"></script>
+    </body>
+</html>
