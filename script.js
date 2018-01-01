@@ -55,7 +55,6 @@ function XyloController($scope, $http, $document, $timeout, xyloSynth, xyloBacke
 var app = angular.module('XyloDisk', []);
 
 app.service("xyloSynth", function ($http, $q, $rootScope) {
-	var AudioContext = audioContext || webkitAudioContext;
 	var audioContext = typeof AudioContext != 'undefined' ? new AudioContext() : null;
 
 	var audioBuffer = $http({
